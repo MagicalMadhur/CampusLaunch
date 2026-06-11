@@ -1,0 +1,540 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Login/Register - CampusLaunch</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            overflow-y: auto;
+            padding: 40px 20px;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.1) 0%, transparent 40%),
+                        radial-gradient(circle at 50% 80%, rgba(76, 175, 255, 0.08) 0%, transparent 50%);
+            animation: bgFloat 20s ease-in-out infinite;
+            z-index: 0;
+        }
+
+        @keyframes bgFloat {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -20px) rotate(1deg); }
+            66% { transform: translate(-20px, 15px) rotate(-1deg); }
+        }
+
+        .form-container {
+            position: relative;
+            z-index: 1;
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 40px 35px;
+            border-radius: 24px;
+            width: 420px;
+            max-width: 95vw;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: transform 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-container h2 {
+            text-align: center;
+            margin-bottom: 8px;
+            color: #fff;
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .form-subtitle {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 14px;
+            margin-bottom: 28px;
+        }
+
+        .form-container form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-container input,
+        .form-container select {
+            margin-bottom: 14px;
+            padding: 13px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            color: #fff;
+            background: rgba(255, 255, 255, 0.06);
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .form-container input::placeholder {
+            color: rgba(255, 255, 255, 0.35);
+        }
+
+        .form-container input:focus,
+        .form-container select:focus {
+            border-color: rgba(120, 119, 198, 0.6);
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 0 3px rgba(120, 119, 198, 0.15);
+        }
+
+        .form-container select option {
+            background: #1a1a2e;
+            color: #fff;
+        }
+
+        .form-container button[type="submit"] {
+            padding: 14px;
+            background: linear-gradient(135deg, #7877c6, #6c63ff);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            transition: all 0.3s ease;
+            margin-top: 4px;
+        }
+
+        .form-container button[type="submit"]:hover {
+            background: linear-gradient(135deg, #6c63ff, #5a52e0);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(108, 99, 255, 0.35);
+        }
+
+        .form-container button[type="submit"]:active {
+            transform: translateY(0);
+        }
+
+        .toggle-area {
+            text-align: center;
+            margin-top: 20px;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 14px;
+        }
+
+        .form-container .toggle-btn {
+            background: none;
+            border: none;
+            color: #7877c6;
+            text-decoration: none;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 0;
+            transition: color 0.3s;
+        }
+
+        .form-container .toggle-btn:hover {
+            color: #9b9aeb;
+        }
+
+        .error-message {
+            color: #ff6b6b;
+            text-align: center;
+            display: none;
+            font-size: 13px;
+            padding: 10px;
+            border-radius: 10px;
+            background: rgba(255, 107, 107, 0.1);
+            border: 1px solid rgba(255, 107, 107, 0.2);
+            margin-bottom: 12px;
+        }
+
+        .gender-container {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 14px;
+            padding: 12px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .gender-container label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        .form-container input[type="radio"] {
+            margin: 0;
+            accent-color: #7877c6;
+            width: 16px;
+            height: 16px;
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 16px;
+        }
+
+        .back-link a {
+            color: rgba(255, 255, 255, 0.4);
+            text-decoration: none;
+            font-size: 13px;
+            transition: color 0.3s;
+        }
+
+        .back-link a:hover {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .form-label {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        /* Resume upload styling */
+        .resume-upload-area {
+            margin-bottom: 14px;
+            padding: 18px 16px;
+            border: 2px dashed rgba(120, 119, 198, 0.3);
+            border-radius: 12px;
+            background: rgba(120, 119, 198, 0.05);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .resume-upload-area:hover {
+            border-color: rgba(120, 119, 198, 0.6);
+            background: rgba(120, 119, 198, 0.1);
+        }
+
+        .resume-upload-area .upload-icon {
+            font-size: 28px;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .resume-upload-area .upload-text {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 13px;
+        }
+
+        .resume-upload-area .upload-text strong {
+            color: #7877c6;
+        }
+
+        .resume-upload-area input[type="file"] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+            margin: 0;
+            padding: 0;
+        }
+
+        .resume-file-name {
+            color: #7877c6;
+            font-size: 13px;
+            margin-top: 6px;
+            display: none;
+        }
+
+        .optional-tag {
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 11px;
+            font-weight: 400;
+            text-transform: none;
+            letter-spacing: 0;
+        }
+
+        /* Loading spinner */
+        .btn-loading {
+            position: relative;
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        .btn-loading::after {
+            content: '';
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            width: 18px;
+            height: 18px;
+            margin-top: -9px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .logo-area {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .logo-area .logo-text {
+            font-size: 20px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #7877c6, #ff77c6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="form-container" id="loginFormContainer">
+        <div class="logo-area">
+            <span class="logo-text">CampusLaunch</span>
+        </div>
+        <h2>Welcome Back</h2>
+        <p class="form-subtitle">Sign in to access your dashboard</p>
+        <form id="studentLoginForm" onsubmit="validateLoginForm(event)">
+            <input type="text" id="loginUsername" placeholder="Username" required>
+            <input type="password" id="loginPassword" placeholder="Password" required>
+            <div class="error-message" id="loginErrorMessage">Invalid username or password.</div>
+            <button type="submit" id="loginBtn">Sign In</button>
+        </form>
+        <p class="toggle-area">Don't have an account? <button class="toggle-btn" onclick="toggleForms()">Create one</button></p>
+        <div class="back-link">
+            <a href="index.html">← Back to Home</a>
+        </div>
+    </div>
+
+    <div class="form-container" id="registerFormContainer" style="display:none;">
+        <div class="logo-area">
+            <span class="logo-text">CampusLaunch</span>
+        </div>
+        <h2>Create Account</h2>
+        <p class="form-subtitle">Join the smart campus placement portal</p>
+        <form id="studentRegisterForm" onsubmit="validateRegisterForm(event)">
+            <input type="text" id="name" placeholder="Full Name" required>
+            <input type="email" id="email" placeholder="Email Address" required>
+            <input type="tel" id="phone" placeholder="Phone Number" required>
+            <input type="date" id="dob" placeholder="Date of Birth" required>
+            <input type="text" id="college" placeholder="College Name" required>
+
+            <!-- Department Dropdown -->
+            <select id="department" required>
+                <option value="">Select Department</option>
+                <option value="COMPS">COMPS</option>
+                <option value="MECH">MECH</option>
+                <option value="EXTC">EXTC</option>
+                <option value="IT">IT</option>
+                <option value="CIVIL">CIVIL</option>
+                <option value="ELX">ELX</option>
+                <option value="AI&DS">AI&DS</option>
+            </select>
+
+            <!-- Gender Radio Buttons -->
+            <div class="gender-container">
+                <label>
+                    <input type="radio" id="male" name="gender" value="Male" required>
+                    Male
+                </label>
+                <label>
+                    <input type="radio" id="female" name="gender" value="Female" required>
+                    Female
+                </label>
+            </div>
+
+            <input type="text" id="registerUsername" placeholder="Choose a Username" required>
+            <input type="password" id="registerPassword" placeholder="Create Password" required>
+
+            <!-- Resume Upload -->
+            <label class="form-label">Upload Resume (PDF) <span class="optional-tag">— recommended</span></label>
+            <div class="resume-upload-area" id="resumeUploadArea">
+                <span class="upload-icon">📄</span>
+                <span class="upload-text"><strong>Click to upload</strong> or drag & drop</span>
+                <span class="upload-text" style="display:block; margin-top:2px; font-size:11px;">PDF files only, max 5MB</span>
+                <input type="file" id="resumeFile" accept=".pdf" onchange="handleResumeSelect(this)">
+                <div class="resume-file-name" id="resumeFileName"></div>
+            </div>
+
+            <div class="error-message" id="registerErrorMessage">Please fill out all fields.</div>
+            <button type="submit" id="registerBtn">Create Account</button>
+        </form>
+        <p class="toggle-area">Already have an account? <button class="toggle-btn" onclick="toggleForms()">Sign in</button></p>
+        <div class="back-link">
+            <a href="index.html">← Back to Home</a>
+        </div>
+    </div>
+
+    <script>
+        function toggleForms() {
+            var loginForm = document.getElementById('loginFormContainer');
+            var registerForm = document.getElementById('registerFormContainer');
+            document.getElementById('loginErrorMessage').style.display = 'none';
+            document.getElementById('registerErrorMessage').style.display = 'none';
+            if (loginForm.style.display === 'none') {
+                loginForm.style.display = 'block';
+                registerForm.style.display = 'none';
+            } else {
+                loginForm.style.display = 'none';
+                registerForm.style.display = 'block';
+            }
+        }
+
+        function handleResumeSelect(input) {
+            const fileName = document.getElementById('resumeFileName');
+            if (input.files && input.files[0]) {
+                fileName.textContent = '✅ ' + input.files[0].name;
+                fileName.style.display = 'block';
+            } else {
+                fileName.style.display = 'none';
+            }
+        }
+
+        function validateLoginForm(event) {
+            event.preventDefault();
+            var username = document.getElementById('loginUsername').value;
+            var password = document.getElementById('loginPassword').value;
+            var btn = document.getElementById('loginBtn');
+            btn.classList.add('btn-loading');
+            btn.textContent = 'Signing in...';
+
+            fetch('http://localhost:3000/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, password }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                btn.classList.remove('btn-loading');
+                btn.textContent = 'Sign In';
+                if (data.message === 'Login successful') {
+                    localStorage.setItem('username', username);
+                    localStorage.setItem('fullName', data.user.name);
+                    localStorage.setItem('department', data.user.department);
+                    if (data.user.resumePath) {
+                        localStorage.setItem('resumePath', data.user.resumePath);
+                    }
+                    if (data.user.resumeOriginalName) {
+                        localStorage.setItem('resumeOriginalName', data.user.resumeOriginalName);
+                    }
+                    window.location.href = "studentdashboard.html";
+                } else {
+                    document.getElementById('loginErrorMessage').style.display = 'block';
+                }
+            })
+            .catch(error => {
+                btn.classList.remove('btn-loading');
+                btn.textContent = 'Sign In';
+                console.error('Error:', error);
+                document.getElementById('loginErrorMessage').style.display = 'block';
+                document.getElementById('loginErrorMessage').innerText = 'An error occurred during login.';
+            });
+        }
+        
+        function validateRegisterForm(event) {
+            event.preventDefault();
+            var name = document.getElementById('name').value;
+            var email = document.getElementById('email').value;
+            var phone = document.getElementById('phone').value;
+            var dob = document.getElementById('dob').value;
+            var college = document.getElementById('college').value;
+            var department = document.getElementById('department').value;
+            var gender = document.querySelector('input[name="gender"]:checked')?.value;
+            var username = document.getElementById('registerUsername').value;
+            var password = document.getElementById('registerPassword').value;
+            var resumeFile = document.getElementById('resumeFile').files[0];
+
+            if (name && email && phone && dob && college && department && gender && username && password) {
+                var btn = document.getElementById('registerBtn');
+                btn.classList.add('btn-loading');
+                btn.textContent = 'Creating account...';
+
+                // Use FormData for multipart upload (resume file)
+                var formData = new FormData();
+                formData.append('name', name);
+                formData.append('email', email);
+                formData.append('phone', phone);
+                formData.append('dob', dob);
+                formData.append('college', college);
+                formData.append('department', department);
+                formData.append('gender', gender);
+                formData.append('username', username);
+                formData.append('password', password);
+                if (resumeFile) {
+                    formData.append('resume', resumeFile);
+                }
+
+                fetch('http://localhost:3000/register', {
+                    method: 'POST',
+                    body: formData,  // No Content-Type header - browser sets it with boundary
+                })
+                .then(response => response.json())
+                .then(data => {
+                    btn.classList.remove('btn-loading');
+                    btn.textContent = 'Create Account';
+                    if (data.message === 'Student registration successful') {
+                        alert('Registration successful! Please sign in.');
+                        toggleForms();
+                    } else {
+                        document.getElementById('registerErrorMessage').style.display = 'block';
+                        document.getElementById('registerErrorMessage').innerText = data.message;
+                    }
+                })
+                .catch(error => {
+                    btn.classList.remove('btn-loading');
+                    btn.textContent = 'Create Account';
+                    console.error('Error:', error);
+                    alert('Error during registration');
+                });
+            } else {
+                document.getElementById('registerErrorMessage').style.display = 'block';
+            }
+        }
+    </script>
+</body>
+
+</html>

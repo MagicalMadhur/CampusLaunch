@@ -1,0 +1,49 @@
+# ============================================
+# CampusLaunch - Python Dependencies
+# Install with: pip install -r requirements.txt
+# ============================================
+
+# --- Core Streamlit Framework ---
+streamlit>=1.30.0
+
+# --- Google Gemini AI ---
+google-generativeai>=0.5.0
+google-api-core>=2.15.0
+
+# --- MongoDB ---
+pymongo>=4.6.0
+
+# --- Environment & Config ---
+python-dotenv>=1.0.0
+
+# --- Computer Vision (Proctoring) ---
+opencv-python-headless>=4.8.0
+streamlit-webrtc>=0.47.0
+
+# --- PDF Processing ---
+pypdf>=4.0.0
+reportlab>=4.0.0
+
+# --- Data & Visualization ---
+pandas>=2.1.0
+plotly>=5.18.0
+numpy>=1.24.0
+openpyxl>=3.1.0
+
+# --- Web Scraping (Interview Prep) ---
+beautifulsoup4>=4.12.0
+requests>=2.31.0
+duckduckgo-search>=6.0.0
+
+# --- Code Editor (DSA Module) ---
+streamlit-ace>=0.1.1
+
+# --- Speech Recognition (Mock Interview) ---
+SpeechRecognition>=3.10.0
+PyAudio>=0.2.14
+
+# --- Image Processing ---
+Pillow>=10.0.0
+
+# --- BSON ObjectId support ---
+bson>=0.5.10

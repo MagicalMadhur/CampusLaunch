@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Students — Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; height: 100vh; background: #0a0a14; color: #e2e8f0; display: flex; overflow: hidden; }
+
+        .sidebar { width: 260px; min-width: 260px; background: linear-gradient(180deg, #111122 0%, #0a0a14 100%); border-right: 1px solid rgba(99,102,241,.15); padding: 28px 20px; display: flex; flex-direction: column; overflow-y: auto; }
+        .sidebar h2 { text-align: center; font-size: 1.3rem; font-weight: 700; margin-bottom: 8px; background: linear-gradient(135deg, #6366f1, #818cf8, #a5b4fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .sidebar .subtitle { text-align: center; font-size: .75rem; color: #64748b; margin-bottom: 28px; letter-spacing: 1px; text-transform: uppercase; }
+        .sidebar a { color: #94a3b8; text-decoration: none; font-size: .9rem; font-weight: 500; display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 10px; transition: all .25s ease; border: 1px solid transparent; margin-bottom: 4px; }
+        .sidebar a:hover, .sidebar a.active { background: rgba(99,102,241,.12); color: #c7d2fe; border-color: rgba(99,102,241,.25); }
+
+        .main-content { flex: 1; padding: 32px 40px; overflow-y: auto; background: linear-gradient(145deg, #0a0a14 0%, #12121f 40%, #0f1628 100%); }
+        .main-content h1 { font-size: 1.6rem; font-weight: 700; color: #f1f5f9; margin-bottom: 4px; }
+        .main-content .welcome-sub { font-size: .9rem; color: #64748b; margin-bottom: 24px; }
+
+        .card { background: rgba(18,18,32,.65); backdrop-filter: blur(12px); border: 1px solid rgba(99,102,241,.18); border-radius: 16px; padding: 24px; margin-bottom: 24px; }
+        .card h2 { color: #c7d2fe; font-size: 1.1rem; margin-bottom: 12px; }
+        .card .count { font-size: 2.8rem; font-weight: 700; background: linear-gradient(135deg, #6366f1, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-align: center; margin-top: 8px; }
+
+        .student-list ul { list-style: none; }
+        .student-list li { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; border-radius: 12px; margin-bottom: 10px; background: rgba(99,102,241,.06); border: 1px solid rgba(99,102,241,.12); transition: all .25s; }
+        .student-list li:hover { background: rgba(99,102,241,.12); border-color: rgba(99,102,241,.25); }
+        .student-list li strong { color: #c7d2fe; }
+        .student-list li p { color: #94a3b8; font-size: .85rem; margin: 2px 0; }
+
+        .action-buttons { display: flex; gap: 8px; }
+        .edit-btn { background: rgba(99,102,241,.15); color: #a5b4fc; border: 1px solid rgba(99,102,241,.3); padding: 6px 14px; font-size: .8rem; font-weight: 600; font-family: 'Inter', sans-serif; border-radius: 8px; cursor: pointer; transition: all .25s; }
+        .edit-btn:hover { background: rgba(99,102,241,.25); color: #c7d2fe; }
+        .delete-btn { background: rgba(239,68,68,.15); color: #fca5a5; border: 1px solid rgba(239,68,68,.25); padding: 6px 14px; font-size: .8rem; font-weight: 600; font-family: 'Inter', sans-serif; border-radius: 8px; cursor: pointer; transition: all .25s; }
+        .delete-btn:hover { background: rgba(239,68,68,.25); color: #fecaca; }
+
+        /* Modal */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,.6); backdrop-filter: blur(4px); justify-content: center; align-items: center; z-index: 100; }
+        .modal-content { background: #12121f; border: 1px solid rgba(99,102,241,.25); border-radius: 16px; padding: 32px; width: 420px; box-shadow: 0 20px 40px rgba(0,0,0,.4); }
+        .modal-content h2 { color: #f1f5f9; margin-bottom: 20px; font-size: 1.2rem; }
+        .modal-content label { display: block; margin-bottom: 6px; color: #94a3b8; font-size: .85rem; font-weight: 600; }
+        .modal-content input { width: 100%; padding: 10px 14px; margin-bottom: 14px; background: rgba(22,22,40,.85); border: 1px solid rgba(99,102,241,.25); border-radius: 10px; color: #e2e8f0; font-family: 'Inter', sans-serif; font-size: .9rem; outline: none; }
+        .modal-content input:focus { border-color: #6366f1; }
+        .modal-content button { background: linear-gradient(135deg, #6366f1, #818cf8); color: #fff; border: none; padding: 10px 20px; border-radius: 10px; font-weight: 600; font-family: 'Inter', sans-serif; cursor: pointer; transition: all .25s; }
+        .modal-content button:hover { background: linear-gradient(135deg, #4f46e5, #6366f1); }
+        .close { color: #64748b; float: right; font-size: 1.4rem; cursor: pointer; transition: color .2s; }
+        .close:hover { color: #e2e8f0; }
+
+        ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: rgba(99,102,241,.25); border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>CampusLaunch</h2>
+        <p class="subtitle">Admin Portal</p>
+        <a href="addashboard.html">📊 Dashboard</a>
+        <a href="admin-dashboard.html" class="active">👥 Manage Students</a>
+        <a href="adminprofile.html">👤 Admin Profile</a>
+        <a href="admin-announce.html">📢 Announcements</a>
+        <a href="admin-login.html" id="logout">🚪 Logout</a>
+    </div>
+
+    <div class="main-content">
+        <h1>👥 Manage Students</h1>
+        <p class="welcome-sub">View, edit and manage student records</p>
+
+        <div class="card" style="text-align:center;">
+            <h2>Total Registered Students</h2>
+            <div class="count" id="student-count">Loading...</div>
+        </div>
+
+        <div class="card student-list">
+            <h2>Student Details</h2>
+            <ul id="students-container"></ul>
+        </div>
+    </div>
+
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Edit Student</h2>
+            <form id="editStudentForm">
+                <label for="editName">Name:</label>
+                <input type="text" id="editName" name="name" required>
+                <label for="editEmail">Email:</label>
+                <input type="email" id="editEmail" name="email" required>
+                <label for="editPhone">Phone:</label>
+                <input type="text" id="editPhone" name="phone" required>
+                <label for="editDepartment">Department:</label>
+                <input type="text" id="editDepartment" name="department" required>
+                <button type="button" onclick="updateStudent()">Update Student</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let currentStudentUsername = '';
+
+        async function fetchAdminProfile() {
+            try { await fetch('http://localhost:3000/admin/profile'); } catch(e) { console.error(e); }
+        }
+
+        async function fetchStudentCount() {
+            try { const r = await fetch('http://localhost:3000/students/count'); const d = await r.json(); if (r.ok) document.getElementById('student-count').textContent = d.count; } catch(e) { console.error(e); }
+        }
+
+        async function fetchStudents() {
+            try {
+                const r = await fetch('http://localhost:3000/students');
+                const data = await r.json();
+                if (!r.ok) return;
+                const c = document.getElementById('students-container'); c.innerHTML = '';
+                data.forEach(s => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<div><strong>${s.name}</strong><p>Email: ${s.email}</p><p>Phone: ${s.phone}</p><p>Department: ${s.department}</p></div><div class="action-buttons"><button class="edit-btn" onclick="editStudent('${s.username}','${s.name}','${s.email}','${s.phone}','${s.department}')">✏️ Edit</button><button class="delete-btn" onclick="deleteStudent('${s.username}')">🗑️ Delete</button></div>`;
+                    c.appendChild(li);
+                });
+            } catch(e) { console.error(e); }
+        }
+
+        function editStudent(username, name, email, phone, department) {
+            currentStudentUsername = username;
+            document.getElementById('editName').value = name;
+            document.getElementById('editEmail').value = email;
+            document.getElementById('editPhone').value = phone;
+            document.getElementById('editDepartment').value = department;
+            document.getElementById('editModal').style.display = 'flex';
+        }
+
+        function closeModal() { document.getElementById('editModal').style.display = 'none'; }
+
+        async function updateStudent() {
+            const body = { name: document.getElementById('editName').value, email: document.getElementById('editEmail').value, phone: document.getElementById('editPhone').value, department: document.getElementById('editDepartment').value };
+            try { const r = await fetch(`http://localhost:3000/students/${currentStudentUsername}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }); if (r.ok) { alert('Student updated'); closeModal(); fetchStudents(); } else alert('Error updating'); } catch(e) { console.error(e); }
+        }
+
+        async function deleteStudent(username) {
+            if (!confirm('Delete this student?')) return;
+            try { const r = await fetch(`http://localhost:3000/students/${username}`, { method: 'DELETE' }); if (r.ok) { alert('Student deleted'); fetchStudents(); } } catch(e) { console.error(e); }
+        }
+
+        document.getElementById('logout').addEventListener('click', function(e) { e.preventDefault(); localStorage.clear(); window.location.href = 'admin-login.html'; });
+        fetchAdminProfile(); fetchStudentCount(); fetchStudents();
+    </script>
+</body>
+</html>

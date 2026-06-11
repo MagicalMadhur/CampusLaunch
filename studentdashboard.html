@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      height: 100vh;
+      background: #0a0a14;
+      color: #e2e8f0;
+      overflow: hidden;
+    }
+
+    .dashboard {
+      display: flex;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      width: 260px;
+      min-width: 260px;
+      background: linear-gradient(180deg, #111122 0%, #0a0a14 100%);
+      border-right: 1px solid rgba(99, 102, 241, .15);
+      padding: 28px 20px;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+
+    .sidebar h2 {
+      text-align: center;
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, #6366f1, #818cf8, #a5b4fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .sidebar .subtitle {
+      text-align: center;
+      font-size: .75rem;
+      color: #64748b;
+      margin-bottom: 28px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .sidebar ul {
+      list-style: none;
+      flex: 1;
+    }
+
+    .sidebar ul li {
+      margin-bottom: 4px;
+    }
+
+    .sidebar ul li a {
+      color: #94a3b8;
+      text-decoration: none;
+      font-size: .9rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      transition: all .25s ease;
+      border: 1px solid transparent;
+    }
+
+    .sidebar ul li a:hover,
+    .sidebar ul li a.active {
+      background: rgba(99, 102, 241, .12);
+      color: #c7d2fe;
+      border-color: rgba(99, 102, 241, .25);
+    }
+
+    /* ── Main ── */
+    .main-content {
+      flex: 1;
+      padding: 32px 40px;
+      overflow-y: auto;
+      background: linear-gradient(145deg, #0a0a14 0%, #12121f 40%, #0f1628 100%);
+    }
+
+    .main-content h1 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #f1f5f9;
+      margin-bottom: 4px;
+    }
+
+    .main-content .welcome-sub {
+      font-size: .9rem;
+      color: #64748b;
+      margin-bottom: 24px;
+    }
+
+    /* ── Content Card ── */
+    #content {
+      background: rgba(18, 18, 32, .65);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(99, 102, 241, .18);
+      border-radius: 16px;
+      padding: 28px;
+      min-height: 300px;
+      color: #c9d1d9;
+    }
+
+    #content h2 {
+      color: #f1f5f9;
+      font-size: 1.35rem;
+      margin-bottom: 12px;
+    }
+
+    #content p {
+      color: #94a3b8;
+      line-height: 1.7;
+    }
+
+    #content hr {
+      border: none;
+      border-top: 1px solid rgba(99, 102, 241, .12);
+      margin: 18px 0;
+    }
+
+    /* ── Buttons ── */
+    .btn {
+      background: rgba(99, 102, 241, .12);
+      color: #c7d2fe;
+      border: 1px solid rgba(99, 102, 241, .3);
+      border-radius: 10px;
+      padding: 10px 22px;
+      font-size: .9rem;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      transition: all .25s ease;
+      text-decoration: none;
+      display: inline-block;
+      margin: 6px 8px 6px 0;
+    }
+
+    .btn:hover {
+      background: linear-gradient(135deg, #6366f1, #818cf8);
+      color: #fff;
+      border-color: #6366f1;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 15px rgba(99, 102, 241, .3);
+    }
+
+    .btn a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .button-container {
+      margin: 12px 0;
+    }
+
+    /* ── Forms ── */
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: #c9d1d9;
+      font-size: .9rem;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 60%;
+      padding: 10px 14px;
+      border-radius: 10px;
+      background: rgba(22, 22, 40, .85);
+      border: 1px solid rgba(99, 102, 241, .25);
+      color: #e2e8f0;
+      font-family: 'Inter', sans-serif;
+      font-size: .9rem;
+      transition: border-color .2s, box-shadow .2s;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #6366f1;
+      box-shadow: 0 0 12px rgba(99, 102, 241, .2);
+    }
+
+    .form-actions {
+      margin-top: 20px;
+    }
+
+    .form-actions button {
+      padding: 10px 24px;
+      background: linear-gradient(135deg, #6366f1, #818cf8);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      transition: all .25s;
+    }
+
+    .form-actions button:hover {
+      background: linear-gradient(135deg, #4f46e5, #6366f1);
+      box-shadow: 0 6px 20px rgba(99, 102, 241, .35);
+    }
+
+    /* ── Announcements ── */
+    .announcement {
+      margin-bottom: 18px;
+      padding: 16px;
+      background: rgba(99, 102, 241, .06);
+      border-radius: 12px;
+      border: 1px solid rgba(99, 102, 241, .12);
+    }
+
+    .announcement h3 {
+      color: #c7d2fe;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .announcement p {
+      font-size: .9rem;
+      line-height: 1.6;
+      color: #94a3b8;
+    }
+
+    .announcement small {
+      color: #64748b;
+    }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(99, 102, 241, .25);
+      border-radius: 8px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(99, 102, 241, .4);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="dashboard">
+    <div class="sidebar">
+      <h2>CampusLaunch</h2>
+      <p class="subtitle">Student Portal</p>
+      <ul>
+        <li><a href="#" id="dashboard">📊 Dashboard</a></li>
+        <li><a href="#" id="aptitude">🧠 Aptitude</a></li>
+        <li><a href="#" id="tech">🧩 DSA Practice</a></li>
+        <li><a href="#" id="Mockinterview">🎙️ Mock Interview</a></li>
+        <li><a href="#" id="interviewprep">🎯 Interview Prep</a></li>
+        <li><a href="#" id="resume">📝 Resume Builder</a></li>
+        <li><a href="#" id="resumeats">📄 Resume Scanner</a></li>
+        <li><a href="#" id="jobsearch">💼 Job Search</a></li>
+        <li><a href="#" id="studyplan">📚 Study Plan</a></li>
+        <li><a href="#" id="announcements">📢 Announcements</a></li>
+        <li><a href="#" id="profile">👤 Profile</a></li>
+        <li><a href="#" id="logout">🚪 Logout</a></li>
+      </ul>
+    </div>
+
+    <div class="main-content">
+      <h1>Welcome, <span id="fullName">Student</span></h1>
+      <p class="welcome-sub">Your placement preparation hub</p>
+      <div id="content">
+        <p>Select an option from the sidebar to get started.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const content = document.getElementById('content');
+
+      // Session guard: redirect to login if not authenticated
+      const username = localStorage.getItem('username');
+      if (!username) {
+        window.location.href = 'student-login.html';
+        return;
+      }
+
+      // Display the student's name
+      const fullName = localStorage.getItem('fullName');
+      if (fullName) {
+        document.getElementById('fullName').textContent = fullName;
+      }
+
+      // Dashboard Section - show resume status
+      document.getElementById('dashboard').addEventListener('click', function () {
+        const resumeName = localStorage.getItem('resumeOriginalName');
+        const resumeStatus = resumeName
+          ? `<div style="margin-top:15px;padding:15px;background:rgba(34,197,94,.1);border-radius:12px;border-left:4px solid #22c55e;color:#a7f3d0;">
+               <strong>📄 Resume:</strong> ${resumeName}
+               <a href="http://localhost:3000/students/${encodeURIComponent(username)}/resume/download" style="margin-left:10px;color:#818cf8;">Download</a>
+             </div>`
+          : `<div style="margin-top:15px;padding:15px;background:rgba(234,179,8,.1);border-radius:12px;border-left:4px solid #eab308;color:#fde68a;">
+               <strong>⚠️ No resume uploaded.</strong> Go to Profile to upload your resume.
+             </div>`;
+        content.innerHTML = `<h2>📊 Dashboard</h2><p>Welcome to your dashboard. Here you will find an overview of your activities and performance.</p>${resumeStatus}`;
+      });
+
+      // Aptitude Section
+      document.getElementById('aptitude').addEventListener('click', function (event) {
+        event.preventDefault();
+        content.innerHTML = `<h2>Aptitude Options</h2>
+            <button id="quizButton" class="btn">Aptitude Quiz</button>
+            <button id="dashboardButton" class="btn">Result Analysis &amp; Visualization</button>`;
+        document.getElementById('quizButton').addEventListener('click', function () {
+          window.location.href = 'http://localhost:8501/?username=' + encodeURIComponent(username);
+        });
+        document.getElementById('dashboardButton').addEventListener('click', function () {
+          window.location.href = 'http://localhost:8502/?username=' + encodeURIComponent(username);
+        });
+      });
+
+      // Mock Interview
+      document.getElementById('Mockinterview').addEventListener('click', function (event) {
+        event.preventDefault();
+        content.innerHTML = `<h2>Mock Interview</h2>
+            <button id="interButton" class="btn">Start Interview</button>`;
+        document.getElementById('interButton').addEventListener('click', function () {
+          window.location.href = 'http://localhost:8505/?username=' + encodeURIComponent(username);
+        });
+      });
+
+      // Interview Prep Section
+      document.getElementById('interviewprep').addEventListener('click', function (event) {
+        event.preventDefault();
+        content.innerHTML = `<h2>🎯 Interview Prep</h2>
+            <p>Find real interview questions from Glassdoor, AmbitionBox, GFG & more — powered by AI.</p>
+            <button id="interviewPrepButton" class="btn">Open Interview Prep</button>`;
+        document.getElementById('interviewPrepButton').addEventListener('click', function () {
+          window.location.href = 'http://localhost:8507/?username=' + encodeURIComponent(username);
+        });
+      });
+
+      // Resume Builder Section
+      document.getElementById('resume').addEventListener('click', function () {
+        content.innerHTML = `<h2>📄 Resume Builder</h2>
+            <p>Build professional resumes section-by-section, powered by AI. Save multiple resumes for different roles.</p>
+            <button id="resumeBuilderButton" class="btn">Open Resume Builder</button>`;
+        document.getElementById('resumeBuilderButton').addEventListener('click', function () {
+          window.location.href = 'http://localhost:8508/?username=' + encodeURIComponent(username);
+        });
+      });
+
+      // Resume Scanner Section - uses stored resume, no upload needed
+      document.getElementById('resumeats').addEventListener('click', function () {
+        const resumeName = localStorage.getItem('resumeOriginalName');
+        if (!resumeName) {
+          content.innerHTML = `<h2>📄 Resume Scanner</h2>
+            <div style="padding:20px;background:rgba(234,179,8,.1);border-radius:12px;border-left:4px solid #eab308;color:#fde68a;">
+              <p><strong>⚠️ No resume uploaded yet.</strong></p>
+              <p>Please go to <strong>Profile</strong> section and upload your resume first.</p>
+            </div>`;
+          return;
+        }
+        content.innerHTML = `<h2>📄 Resume Scanner</h2>
+            <div style="padding:15px;background:rgba(34,197,94,.1);border-radius:12px;border-left:4px solid #22c55e;margin-bottom:15px;color:#a7f3d0;">
+              <strong>📄 Using resume:</strong> ${resumeName}
+            </div>
+            <p>Your uploaded resume will be automatically used for ATS scanning.</p>
+            <div class="button-container">
+                <button type="button" class="btn">
+                  <a href="http://localhost:8506/?username=${encodeURIComponent(username)}">Start ATS Scan</a>
+                </button>
+            </div>`;
+      });
+
+      // Job Search Section
+      document.getElementById('jobsearch').addEventListener('click', function () {
+        content.innerHTML = `
+          <h2>Job Search</h2>
+          <p>Find jobs relevant to your profile and skills</p>
+          <div style="margin-bottom:20px;">
+            <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px;">
+              <input type="text" id="jobQuery" placeholder="Job title, skills, or company" style="flex:1;min-width:200px;padding:10px;background:rgba(22,22,40,.85);border:1px solid rgba(99,102,241,.25);border-radius:8px;color:#e2e8f0;font-family:'Inter',sans-serif;outline:none;">
+              <select id="jobDatePosted" style="padding:10px;background:rgba(22,22,40,.85);border:1px solid rgba(99,102,241,.25);border-radius:8px;color:#e2e8f0;font-family:'Inter',sans-serif;">
+                <option value="all">All Time</option>
+                <option value="today">Today</option>
+                <option value="3days">Last 3 Days</option>
+                <option value="week">This Week</option>
+                <option value="month">This Month</option>
+              </select>
+              <button id="searchJobsBtn" class="btn" style="background:linear-gradient(135deg,#6366f1,#818cf8);color:#fff;padding:10px 20px;border:none;border-radius:8px;font-weight:600;cursor:pointer;">🔍 Search</button>
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+              <label style="font-size:14px;color:#94a3b8;"><strong>Filters:</strong></label>
+              <select id="jobType" style="padding:8px;background:rgba(22,22,40,.85);border:1px solid rgba(99,102,241,.25);border-radius:8px;color:#e2e8f0;font-family:'Inter',sans-serif;">
+                <option value="">All Types</option>
+                <option value="FULLTIME">Full Time</option>
+                <option value="PARTTIME">Part Time</option>
+                <option value="INTERN">Internship</option>
+                <option value="CONTRACTOR">Contract</option>
+              </select>
+              <select id="minLPA" style="padding:8px;background:rgba(22,22,40,.85);border:1px solid rgba(99,102,241,.25);border-radius:8px;color:#e2e8f0;font-family:'Inter',sans-serif;">
+                <option value="0">Min Salary (LPA)</option>
+                <option value="3">3+ LPA</option>
+                <option value="5">5+ LPA</option>
+                <option value="8">8+ LPA</option>
+                <option value="10">10+ LPA</option>
+                <option value="15">15+ LPA</option>
+                <option value="20">20+ LPA</option>
+              </select>
+              <input type="text" id="skillsFilter" placeholder="Filter by skills (e.g. python, react)" style="flex:1;min-width:150px;padding:8px;background:rgba(22,22,40,.85);border:1px solid rgba(99,102,241,.25);border-radius:8px;color:#e2e8f0;font-family:'Inter',sans-serif;outline:none;">
+              <button id="useResumeBtn" class="btn" style="background:rgba(34,197,94,.15);color:#86efac;border:1px solid rgba(34,197,94,.3);padding:8px 16px;font-size:13px;border-radius:8px;cursor:pointer;font-weight:600;">📄 Use My Resume Skills</button>
+            </div>
+          </div>
+          <div id="jobResults"><p style="color:#64748b;">Enter a search query or click "Use My Resume Skills" to find relevant jobs.</p></div>
+          <div id="jobPagination" style="margin-top:15px;text-align:center;"></div>
+        `;
+
+        let currentPage = 1;
+
+        document.getElementById('useResumeBtn').addEventListener('click', async function () {
+          const resumePath = localStorage.getItem('resumePath');
+          const dept = localStorage.getItem('department') || '';
+          if (!resumePath) {
+            alert('No resume uploaded. Please upload your resume in Profile first.');
+            return;
+          }
+          // Try to get skills from server
+          try {
+            const resp = await fetch('http://localhost:3000/api/resume/skills?username=' + encodeURIComponent(username));
+            if (resp.ok) {
+              const data = await resp.json();
+              if (data.skills && data.skills.length > 0) {
+                const query = data.skills.slice(0, 5).join(' ') + ' jobs in India';
+                document.getElementById('jobQuery').value = query;
+                document.getElementById('skillsFilter').value = data.skills.join(', ');
+                currentPage = 1;
+                searchJobs(query, currentPage);
+                return;
+              }
+            }
+          } catch(e) { console.log('Skills API not available, using dept fallback'); }
+          // Fallback: use department
+          let query = dept + ' developer jobs in India';
+          document.getElementById('jobQuery').value = query;
+          currentPage = 1;
+          searchJobs(query, currentPage);
+        });
+
+        document.getElementById('searchJobsBtn').addEventListener('click', function () {
+          const query = document.getElementById('jobQuery').value.trim();
+          if (!query) { alert('Please enter a search query'); return; }
+          currentPage = 1;
+          searchJobs(query, currentPage);
+        });
+
+        function searchJobs(query, page) {
+          const datePosted = document.getElementById('jobDatePosted').value;
+          const jobType = document.getElementById('jobType').value;
+          const resultsDiv = document.getElementById('jobResults');
+          resultsDiv.innerHTML = '<p style="color:#a5b4fc;">🔄 Searching for jobs...</p>';
+
+          let url = 'http://localhost:3000/api/jobs/search?query=' + encodeURIComponent(query) + '&page=' + page + '&date_posted=' + datePosted;
+          if (jobType) url += '&employment_types=' + jobType;
+
+          fetch(url)
+            .then(r => r.json())
+            .then(data => {
+              if (data.data && data.data.length > 0) {
+                const minLPA = parseInt(document.getElementById('minLPA').value) || 0;
+                const skillsFilter = document.getElementById('skillsFilter').value.toLowerCase().trim();
+                const skillsList = skillsFilter ? skillsFilter.split(',').map(s => s.trim()) : [];
+
+                let filtered = data.data;
+                if (minLPA > 0) {
+                  filtered = filtered.filter(j => {
+                    const sal = j.job_min_salary || j.job_max_salary || 0;
+                    return sal >= minLPA * 100000 || sal >= minLPA;
+                  });
+                }
+                if (skillsList.length > 0) {
+                  filtered = filtered.filter(j => {
+                    const desc = ((j.job_description || '') + ' ' + (j.job_title || '')).toLowerCase();
+                    return skillsList.some(sk => desc.includes(sk));
+                  });
+                }
+
+                if (filtered.length === 0) {
+                  resultsDiv.innerHTML = '<p style="color:#fbbf24;">No jobs match your filters. Try adjusting the salary or skills filter.</p>';
+                  return;
+                }
+
+                let html = '';
+                filtered.forEach(job => {
+                  const salary = job.job_min_salary && job.job_max_salary
+                    ? '💰 ' + job.job_min_salary.toLocaleString() + ' - ' + job.job_max_salary.toLocaleString() + ' ' + (job.job_salary_currency || '')
+                    : (job.job_min_salary ? '💰 From ' + job.job_min_salary.toLocaleString() : '💰 Not disclosed');
+                  html += '<div style="padding:16px;margin-bottom:12px;background:rgba(18,18,32,.65);border:1px solid rgba(99,102,241,.18);border-radius:12px;transition:border-color .25s;"' +
+                    ' onmouseover="this.style.borderColor=\'rgba(99,102,241,.35)\'" onmouseout="this.style.borderColor=\'rgba(99,102,241,.18)\'">' +
+                    '<h3 style="margin:0 0 6px;color:#f1f5f9;font-size:1rem;">' + (job.job_title || 'N/A') + '</h3>' +
+                    '<p style="margin:3px 0;color:#94a3b8;font-size:13px;">🏢 ' + (job.employer_name || 'N/A') + '  &nbsp; 📍 ' + (job.job_city || job.job_country || 'Remote') + '</p>' +
+                    '<p style="margin:3px 0;color:#94a3b8;font-size:13px;">' + salary + ' &nbsp; 📋 ' + (job.job_employment_type || 'N/A') + '</p>' +
+                    '<p style="margin:8px 0 10px;color:#64748b;font-size:12px;line-height:1.5;">' + (job.job_description || '').substring(0, 200) + '...</p>' +
+                    '<a href="' + (job.job_apply_link || '#') + '" target="_blank" style="display:inline-block;padding:6px 16px;background:linear-gradient(135deg,#6366f1,#818cf8);color:#fff;border-radius:8px;text-decoration:none;font-size:12px;font-weight:600;">Apply Now →</a>' +
+                    '</div>';
+                });
+                resultsDiv.innerHTML = '<p style="color:#94a3b8;margin-bottom:10px;">Found ' + filtered.length + ' job(s)</p>' + html;
+
+                // Pagination
+                const pagDiv = document.getElementById('jobPagination');
+                pagDiv.innerHTML = (page > 1 ? '<button class="btn" id="prevPageBtn" style="margin-right:10px;">← Previous</button>' : '') +
+                  '<span style="color:#94a3b8;">Page ' + page + '</span>' +
+                  '<button class="btn" id="nextPageBtn" style="margin-left:10px;">Next →</button>';
+                if (page > 1) document.getElementById('prevPageBtn').addEventListener('click', () => { currentPage--; searchJobs(query, currentPage); });
+                document.getElementById('nextPageBtn').addEventListener('click', () => { currentPage++; searchJobs(query, currentPage); });
+              } else {
+                resultsDiv.innerHTML = '<p style="color:#fbbf24;">No jobs found. Try a different search query.</p>';
+              }
+            })
+            .catch(err => {
+              console.error(err);
+              resultsDiv.innerHTML = '<p style="color:#fca5a5;">Error fetching jobs. Make sure the server is running and the API key is configured.</p>';
+            });
+        }
+      });
+
+      // Study Plan Section
+      document.getElementById('studyplan').addEventListener('click', function (event) {
+        event.preventDefault();
+        content.innerHTML = `<h2>📚 Study Plan Generator</h2>
+            <p>Get a personalized, AI-powered day-by-day study plan based on your performance across all modules — Aptitude, DSA, Mock Interviews, Resume & more.</p>
+            <div class="button-container">
+                <button id="studyPlanButton" class="btn">Generate Study Plan</button>
+            </div>`;
+        document.getElementById('studyPlanButton').addEventListener('click', function () {
+          window.location.href = 'http://localhost:8509/?username=' + encodeURIComponent(username);
+        });
+      });
+
+      // Announcements Section
+      document.getElementById('announcements').addEventListener('click', function () {
+        content.innerHTML = '<h2>Announcements</h2><p>Loading announcements...</p>';
+        fetch('http://localhost:3000/announcements')
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.length > 0) {
+              let announcementsHtml = '';
+              data.forEach((announcement) => {
+                announcementsHtml += `<div class="announcement">
+                      <h3>${announcement.title}</h3>
+                      <p>${announcement.content}</p>
+                      <p><small>Published on: ${new Date(announcement.createdAt).toLocaleString()}</small></p>
+                    </div><hr/>`;
+              });
+              content.innerHTML = `<h2>Announcements</h2>${announcementsHtml}`;
+            } else {
+              content.innerHTML = '<h2>Announcements</h2><p>No announcements available.</p>';
+            }
+          })
+          .catch((error) => {
+            content.innerHTML = '<h2>Announcements</h2><p>Failed to load announcements. Please try again later.</p>';
+          });
+      });
+
+      // Profile Section with Resume Management
+      document.getElementById('profile').addEventListener('click', function () {
+        const storedFullName = localStorage.getItem('fullName') || '';
+        const storedEmail = localStorage.getItem('email') || '';
+        const resumeName = localStorage.getItem('resumeOriginalName');
+        const resumeSection = resumeName
+          ? `<div style="padding:15px;background:#e8f5e9;border-radius:8px;border-left:4px solid #4caf50;margin-bottom:15px;">
+               <strong>📄 Current Resume:</strong> ${resumeName}
+               <a href="http://localhost:3000/students/${encodeURIComponent(username)}/resume/download" style="margin-left:10px;color:#1565c0;">Download</a>
+               <button id="deleteResumeBtn" style="margin-left:10px;padding:4px 12px;background:#e53935;color:#fff;border:none;border-radius:4px;cursor:pointer;">Delete</button>
+             </div>`
+          : `<div style="padding:15px;background:#fff3e0;border-radius:8px;border-left:4px solid #ff9800;margin-bottom:15px;">
+               <strong>⚠️ No resume uploaded yet.</strong>
+             </div>`;
+
+        content.innerHTML = `<h2>Profile</h2>
+            ${resumeSection}
+            <div class="form-group" style="margin-bottom:20px;">
+              <label><strong>Upload / Change Resume (PDF):</strong></label>
+              <input type="file" id="resumeUploadInput" accept=".pdf" style="margin-top:8px;">
+              <button id="uploadResumeBtn" style="margin-top:8px;padding:8px 20px;background:#2c3e50;color:#fff;border:none;border-radius:5px;cursor:pointer;">Upload Resume</button>
+              <span id="uploadStatus" style="margin-left:10px;color:#777;"></span>
+            </div>
+            <hr style="margin:20px 0;">
+            <form id="profileForm">
+              <div class="form-group">
+                <label for="fullNameInput">Full Name</label>
+                <input type="text" id="fullNameInput" value="${storedFullName}" />
+              </div>
+              <div class="form-group">
+                <label for="emailInput">Email</label>
+                <input type="email" id="emailInput" value="${storedEmail}" />
+              </div>
+              <div class="form-group">
+                <label for="passwordInput">Password</label>
+                <input type="password" id="passwordInput" placeholder="Enter new password" />
+              </div>
+              <div class="form-actions">
+                <button type="submit">Save Changes</button>
+              </div>
+            </form>`;
+
+        // Upload resume handler
+        document.getElementById('uploadResumeBtn').addEventListener('click', function () {
+          const fileInput = document.getElementById('resumeUploadInput');
+          const statusEl = document.getElementById('uploadStatus');
+          if (!fileInput.files || !fileInput.files[0]) { statusEl.textContent = 'Please select a PDF file.'; return; }
+          const formData = new FormData();
+          formData.append('resume', fileInput.files[0]);
+          statusEl.textContent = 'Uploading...';
+          fetch('http://localhost:3000/students/' + encodeURIComponent(username) + '/resume', { method: 'POST', body: formData })
+            .then(r => r.json())
+            .then(data => {
+              if (data.resumePath) {
+                localStorage.setItem('resumePath', data.resumePath);
+                localStorage.setItem('resumeOriginalName', data.resumeOriginalName);
+                statusEl.textContent = '✅ Resume uploaded successfully!';
+                statusEl.style.color = 'green';
+                setTimeout(() => document.getElementById('profile').click(), 1000);
+              } else { statusEl.textContent = '❌ ' + (data.message || 'Upload failed'); statusEl.style.color = 'red'; }
+            })
+            .catch(err => { statusEl.textContent = '❌ Upload error'; statusEl.style.color = 'red'; });
+        });
+
+        // Delete resume handler
+        const deleteBtn = document.getElementById('deleteResumeBtn');
+        if (deleteBtn) {
+          deleteBtn.addEventListener('click', function () {
+            if (!confirm('Are you sure you want to delete your resume?')) return;
+            fetch('http://localhost:3000/students/' + encodeURIComponent(username) + '/resume', { method: 'DELETE' })
+              .then(r => r.json())
+              .then(data => {
+                localStorage.removeItem('resumePath');
+                localStorage.removeItem('resumeOriginalName');
+                document.getElementById('profile').click();
+              })
+              .catch(err => alert('Error deleting resume'));
+          });
+        }
+
+        // Profile form handler
+        document.getElementById('profileForm').addEventListener('submit', function (event) {
+          event.preventDefault();
+          const newFullName = document.getElementById('fullNameInput').value;
+          const newEmail = document.getElementById('emailInput').value;
+          const newPassword = document.getElementById('passwordInput').value;
+          localStorage.setItem('fullName', newFullName);
+          localStorage.setItem('email', newEmail);
+          if (newPassword) { localStorage.setItem('password', newPassword); }
+          document.getElementById('fullName').textContent = newFullName;
+          alert('Profile updated successfully!');
+        });
+      });
+
+      // Logout Section
+      document.getElementById('logout').addEventListener('click', function () {
+        localStorage.clear();
+        window.location.href = 'student-login.html';
+      });
+
+      // DSA Practice Section
+      document.getElementById('tech').addEventListener('click', function (event) {
+        event.preventDefault();
+        content.innerHTML = `<h2>DSA Practice Options</h2>
+            <button id="dsaQuestionsButton" class="btn">DSA Questions</button>
+            <button id="dsaAnalysisButton" class="btn">DSA Analysis</button>`;
+        document.getElementById('dsaQuestionsButton').addEventListener('click', function () {
+          window.location.href = 'http://localhost:8503/?username=' + encodeURIComponent(username);
+        });
+        document.getElementById('dsaAnalysisButton').addEventListener('click', function () {
+          window.location.href = 'http://localhost:8504/?username=' + encodeURIComponent(username);
+        });
+      });
+    });
+  </script>
+</body>
+
+</html>

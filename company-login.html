@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company Login/Register - CampusLaunch</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            overflow-y: auto;
+            padding: 40px 20px;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(99, 102, 241, 0.12) 0%, transparent 40%),
+                        radial-gradient(circle at 50% 80%, rgba(76, 175, 255, 0.08) 0%, transparent 50%);
+            animation: bgFloat 20s ease-in-out infinite;
+            z-index: 0;
+        }
+
+        @keyframes bgFloat {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -20px) rotate(1deg); }
+            66% { transform: translate(-20px, 15px) rotate(-1deg); }
+        }
+
+        .form-container {
+            position: relative; z-index: 1;
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 40px 35px;
+            border-radius: 24px;
+            width: 420px;
+            max-width: 95vw;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .logo-area { text-align: center; margin-bottom: 24px; }
+        .logo-area .logo-text {
+            font-size: 20px; font-weight: 700;
+            background: linear-gradient(135deg, #7877c6, #a78bfa);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .form-container h2 {
+            text-align: center; margin-bottom: 8px;
+            color: #fff; font-size: 28px; font-weight: 700; letter-spacing: -0.5px;
+        }
+
+        .form-subtitle {
+            text-align: center; color: rgba(255,255,255,0.5);
+            font-size: 14px; margin-bottom: 28px;
+        }
+
+        .role-badge {
+            display: inline-block; margin: 0 auto 20px; padding: 4px 14px;
+            background: rgba(99,102,241,0.15); border: 1px solid rgba(99,102,241,0.3);
+            border-radius: 20px; color: #a5b4fc; font-size: 12px; font-weight: 600;
+            letter-spacing: 1px; text-transform: uppercase; text-align: center; width: fit-content;
+        }
+
+        .form-container form { display: flex; flex-direction: column; }
+
+        .form-container input {
+            margin-bottom: 14px; padding: 13px 16px;
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 12px; font-family: 'Inter', sans-serif;
+            font-size: 14px; color: #fff;
+            background: rgba(255,255,255,0.06);
+            outline: none; transition: all 0.3s ease;
+        }
+
+        .form-container input::placeholder { color: rgba(255,255,255,0.35); }
+
+        .form-container input:focus {
+            border-color: rgba(120,119,198,0.6);
+            background: rgba(255,255,255,0.1);
+            box-shadow: 0 0 0 3px rgba(120,119,198,0.15);
+        }
+
+        .form-container button[type="submit"] {
+            padding: 14px;
+            background: linear-gradient(135deg, #7877c6, #6c63ff);
+            color: white; border: none; border-radius: 12px;
+            cursor: pointer; font-family: 'Inter', sans-serif;
+            font-size: 15px; font-weight: 600; letter-spacing: 0.3px;
+            transition: all 0.3s ease; margin-top: 4px;
+        }
+
+        .form-container button[type="submit"]:hover {
+            background: linear-gradient(135deg, #6c63ff, #5a52e0);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(108,99,255,0.35);
+        }
+
+        .form-container button[type="submit"]:active { transform: translateY(0); }
+
+        .toggle-area { text-align: center; margin-top: 20px; color: rgba(255,255,255,0.5); font-size: 14px; }
+
+        .toggle-btn {
+            background: none; border: none; color: #7877c6;
+            cursor: pointer; font-family: 'Inter', sans-serif;
+            font-size: 14px; font-weight: 600; padding: 0; transition: color 0.3s;
+        }
+        .toggle-btn:hover { color: #9b9aeb; }
+
+        .error-message {
+            color: #ff6b6b; text-align: center; display: none;
+            font-size: 13px; padding: 10px; border-radius: 10px;
+            background: rgba(255,107,107,0.1); border: 1px solid rgba(255,107,107,0.2);
+            margin-bottom: 12px;
+        }
+
+        .back-link { text-align: center; margin-top: 16px; }
+        .back-link a { color: rgba(255,255,255,0.4); text-decoration: none; font-size: 13px; transition: color 0.3s; }
+        .back-link a:hover { color: rgba(255,255,255,0.7); }
+
+        /* Loading spinner */
+        .btn-loading { position: relative; pointer-events: none; opacity: 0.7; }
+        .btn-loading::after {
+            content: ''; position: absolute; right: 16px; top: 50%;
+            width: 18px; height: 18px; margin-top: -9px;
+            border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff;
+            border-radius: 50%; animation: spin 0.6s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+    <!-- Login Form -->
+    <div class="form-container" id="loginContainer">
+        <div class="logo-area"><span class="logo-text">CampusLaunch</span></div>
+        <div style="text-align:center;"><span class="role-badge">🏢 Company Portal</span></div>
+        <h2>Welcome Back</h2>
+        <p class="form-subtitle">Sign in to your company account</p>
+        <form id="loginForm">
+            <div class="error-message" id="loginError"></div>
+            <input type="text" id="loginUsername" placeholder="Username" required>
+            <input type="password" id="loginPassword" placeholder="Password" required>
+            <button type="submit" id="loginBtn">Sign In</button>
+        </form>
+        <p class="toggle-area">Don't have an account? <button class="toggle-btn" onclick="toggleForms()">Register here</button></p>
+        <div class="back-link"><a href="index.html">← Back to Home</a></div>
+    </div>
+
+    <!-- Register Form -->
+    <div class="form-container" id="registerContainer" style="display:none;">
+        <div class="logo-area"><span class="logo-text">CampusLaunch</span></div>
+        <div style="text-align:center;"><span class="role-badge">🏢 Company Portal</span></div>
+        <h2>Register Company</h2>
+        <p class="form-subtitle">Create your company profile</p>
+        <form id="registerForm">
+            <div class="error-message" id="registerError"></div>
+            <input type="text" id="regCompanyName" placeholder="Company Name" required>
+            <input type="email" id="regEmail" placeholder="Email Address" required>
+            <input type="text" id="regAddress" placeholder="Company Address" required>
+            <input type="tel" id="regPhone" placeholder="Phone Number" required>
+            <input type="text" id="regUsername" placeholder="Choose a Username" required>
+            <input type="password" id="regPassword" placeholder="Create Password" required>
+            <button type="submit" id="registerBtn">Create Account</button>
+        </form>
+        <p class="toggle-area">Already have an account? <button class="toggle-btn" onclick="toggleForms()">Sign in</button></p>
+        <div class="back-link"><a href="index.html">← Back to Home</a></div>
+    </div>
+
+    <script>
+        function toggleForms() {
+            const login = document.getElementById('loginContainer');
+            const register = document.getElementById('registerContainer');
+            document.getElementById('loginError').style.display = 'none';
+            document.getElementById('registerError').style.display = 'none';
+            if (login.style.display === 'none') {
+                login.style.display = 'block'; register.style.display = 'none';
+            } else {
+                login.style.display = 'none'; register.style.display = 'block';
+            }
+        }
+
+        // Login
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('loginBtn');
+            btn.classList.add('btn-loading'); btn.textContent = 'Signing in...';
+
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+
+            try {
+                const response = await fetch('http://localhost:3000/company/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password }),
+                });
+                const data = await response.json();
+                btn.classList.remove('btn-loading'); btn.textContent = 'Sign In';
+
+                if (response.ok) {
+                    localStorage.setItem('companyData', JSON.stringify({ username }));
+                    window.location.href = './company-dashboard.html';
+                } else {
+                    const err = document.getElementById('loginError');
+                    err.textContent = data.message || 'Invalid credentials';
+                    err.style.display = 'block';
+                }
+            } catch (err) {
+                btn.classList.remove('btn-loading'); btn.textContent = 'Sign In';
+                const el = document.getElementById('loginError');
+                el.textContent = 'Server error. Please try again.';
+                el.style.display = 'block';
+            }
+        });
+
+        // Register
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('registerBtn');
+            btn.classList.add('btn-loading'); btn.textContent = 'Creating account...';
+
+            const payload = {
+                companyName: document.getElementById('regCompanyName').value,
+                email: document.getElementById('regEmail').value,
+                companyAddress: document.getElementById('regAddress').value,
+                phone: document.getElementById('regPhone').value,
+                username: document.getElementById('regUsername').value,
+                password: document.getElementById('regPassword').value,
+            };
+
+            try {
+                const response = await fetch('http://localhost:3000/company/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload),
+                });
+                const data = await response.json();
+                btn.classList.remove('btn-loading'); btn.textContent = 'Create Account';
+
+                if (response.ok) {
+                    alert(data.message || 'Registration successful!');
+                    toggleForms();
+                } else {
+                    const err = document.getElementById('registerError');
+                    err.textContent = data.message || 'Registration failed';
+                    err.style.display = 'block';
+                }
+            } catch (err) {
+                btn.classList.remove('btn-loading'); btn.textContent = 'Create Account';
+                const el = document.getElementById('registerError');
+                el.textContent = 'Server error. Please try again.';
+                el.style.display = 'block';
+            }
+        });
+    </script>
+
+</body>
+</html>
